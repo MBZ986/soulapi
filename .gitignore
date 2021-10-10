@@ -1,0 +1,13 @@
+public/dist/
+test-results/
+tmp/
+routes/
+log/
+.idea
+*.iws
+*.iml
+*.ipr
+*.jpeg
+*.log
+*.exe
+*.tmp

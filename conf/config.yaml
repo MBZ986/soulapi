@@ -1,0 +1,13 @@
+redis:
+  db: 0
+  addr: '192.168.2.69:6379'
+  password: ''
+
+# mysql connect configuration
+mysql:
+  host: '192.168.2.69'
+  port: 3307
+  database: 'gorm_soul'
+  username: 'root'
+  password: 'kaidi5208'
+  init_tables: false
