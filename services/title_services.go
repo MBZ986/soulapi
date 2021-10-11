@@ -1,12 +1,14 @@
 package services
 
 import (
+	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"soulapi/global"
 	"soulapi/models"
 )
 
 type TitleService struct {
+	BaseService
 }
 
 func (s TitleService) QueryAllTitles() ([]models.Title, error) {
@@ -26,7 +28,7 @@ func (s TitleService) QueryTitlesByPage(offset, limit int) (*models.Page, error)
 		global.Logger.Errorf("查询%s失败：%v", models_title, res.Error)
 		return nil, res.Error
 	}
-	return s.pageHandler(titles, offset, limit)
+	return s.pageHandler(titles, offset, limit, s.CountTitles)
 }
 
 //查询使用该头衔的用户
@@ -49,7 +51,7 @@ func (s TitleService) FindTitles(title models.Title, offset, limit int) (*models
 		return nil, res.Error
 	}
 
-	return s.pageHandler(titles, offset, limit)
+	return s.pageHandler(titles, offset, limit, s.CountTitles)
 }
 
 func (s TitleService) QueryById(id uint) (*models.Title, error) {
@@ -72,6 +74,15 @@ func (s TitleService) DeleteById(id uint) error {
 	return nil
 }
 func (s TitleService) CreateTitle(title models.Title) (uint, error) {
+	var tmp models.Title
+	if err := global.DB.Where("title = ?", title.Title).First(&tmp).Error; err != nil {
+		global.Logger.Errorf("%s名称重复,创建失败", models_title)
+		return 0, err
+	} else {
+		if &tmp != nil {
+			return 0, fmt.Errorf("%s名称重复,创建失败", models_music)
+		}
+	}
 	res := global.DB.Where("title = ?", title.Title).Attrs(&title).FirstOrCreate(&title)
 	if res.Error != nil {
 		global.Logger.Errorf("创建%s失败", models_title)
@@ -95,19 +106,4 @@ func (s TitleService) CountTitles() (count int64, err error) {
 		return count, res.Error
 	}
 	return count, nil
-}
-
-func (s TitleService) pageHandler(data interface{}, offset, limit int) (*models.Page, error) {
-	var (
-		page models.Page
-		err  error
-	)
-	page.Offset = offset
-	page.Limit = limit
-	page.Data = data
-	if page.Total, err = s.CountTitles(); err != nil {
-		global.Logger.Errorf("查询%s失败：%v", models_title, err)
-		return nil, err
-	}
-	return &page, nil
 }

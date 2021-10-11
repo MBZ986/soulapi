@@ -16,7 +16,7 @@ func init() {
 
 	admin := web.NewNamespace("/api",
 		//UEditor控制器
-		web.NSRouter("/user", &controllers.UserController{}, "get:All"),
+		//web.NSRouter("/user", &controllers.UserController{}, "get:All"),
 		web.NSNamespace("/title",
 			web.NSRouter("/all", &controllers.TitleController{}, "get:All"),
 			web.NSRouter("/add", &controllers.TitleController{}, "post:Add"),
@@ -24,7 +24,8 @@ func init() {
 			web.NSRouter("/upd", &controllers.TitleController{}, "put:Upd"),
 			web.NSRouter("/get", &controllers.TitleController{}, "get:Get"),
 			web.NSRouter("/page", &controllers.TitleController{}, "get:Page"),
-			web.NSRouter("/find", &controllers.TitleController{}, "post:Find"),
+			web.NSRouter("/count", &controllers.TitleController{}, "get:Count"),
+			web.NSRouter("/find", &controllers.TitleController{}, "post,get:Find"),
 			web.NSRouter("/getUsersById", &controllers.TitleController{}, "get:GetUsersById"),
 		),
 	)

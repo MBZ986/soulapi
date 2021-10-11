@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"soulapi/models"
 	"soulapi/services"
 )
@@ -23,11 +22,13 @@ func (c TitleController) Page() {
 func (c TitleController) Find() {
 	var title models.Title
 	offset, limit := c.getPage()
-	fmt.Println(string(c.Ctx.Input.RequestBody))
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &title); err != nil {
-		c.ErrMsg("参数解析错误:%v", err)
-		return
+	if len(c.Ctx.Input.RequestBody) > 0 {
+		if err := json.Unmarshal(c.Ctx.Input.RequestBody, &title); err != nil {
+			c.ErrMsg("参数解析错误:%v", err)
+			return
+		}
 	}
+
 	c.ResData(c.FindTitles(title, offset, limit))
 }
 
@@ -61,6 +62,10 @@ func (c TitleController) Get() {
 	} else {
 		c.ResData(c.QueryById(uint(id)))
 	}
+}
+
+func (c TitleController) Count() {
+	c.ResData(c.CountTitles())
 }
 
 func (c TitleController) GetUsersById() {
