@@ -25,6 +25,7 @@ func (s BaseService) pageHandler(data interface{}, offset, limit int, CountFunc 
 		page models.Page
 		err  error
 	)
+	//page.Offset = offset
 	page.Offset = offset
 	page.Limit = limit
 	page.Data = data
