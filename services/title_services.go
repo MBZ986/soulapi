@@ -11,6 +11,9 @@ type TitleService struct {
 	BaseService
 }
 
+func NewTitleService() *TitleService {
+	return &TitleService{}
+}
 func (s TitleService) QueryAllTitles() ([]models.Title, error) {
 	var titles []models.Title
 	res := global.DB.Find(&titles)
@@ -61,7 +64,6 @@ func (s TitleService) QueryById(id uint) (*models.Title, error) {
 		global.Logger.Errorf("查询%s失败", models_title)
 		return nil, res.Error
 	}
-	spew.Dump(title)
 	return &title, nil
 }
 func (s TitleService) DeleteById(id uint) error {
@@ -98,7 +100,17 @@ func (s TitleService) UpdateTitle(title models.Title) (uint, error) {
 	}
 	return title.Id, nil
 }
-
+func (s TitleService) HasTitle(id uint) (has bool) {
+	if mod, err := s.QueryById(id); err != nil {
+		global.Logger.Errorf("查询%s失败：%v", models_title, err)
+		return false
+	} else {
+		if mod != nil {
+			return true
+		}
+	}
+	return false
+}
 func (s TitleService) CountTitles() (count int64, err error) {
 	res := global.DB.Find(&models.Title{}).Count(&count)
 	if res.Error != nil {

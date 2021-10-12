@@ -10,13 +10,26 @@ import (
 )
 
 func init() {
+	//过滤器
+	web.InsertFilter("*", beego.BeforeExec, filters.JsonParser)
+	//简单路由
 	web.Get("/", func(ctx *context.Context) {
 		ctx.Redirect(http.StatusFound, "/admin/index/index")
 	})
-
-	admin := web.NewNamespace("/api",
+	//组路由(核心路由规则)
+	apiRouter := web.NewNamespace("/api",
 		//UEditor控制器
-		//web.NSRouter("/user", &controllers.UserController{}, "get:All"),
+		web.NSNamespace("/user",
+			web.NSRouter("/all", &controllers.UserController{}, "get:All"),
+			web.NSRouter("/add", &controllers.UserController{}, "post:Add"),
+			web.NSRouter("/del", &controllers.UserController{}, "delete:Del"),
+			web.NSRouter("/upd", &controllers.UserController{}, "put:Upd"),
+			web.NSRouter("/get", &controllers.UserController{}, "get:Get"),
+			web.NSRouter("/page", &controllers.UserController{}, "get:Page"),
+			web.NSRouter("/count", &controllers.UserController{}, "get:Count"),
+			web.NSRouter("/find", &controllers.UserController{}, "post,get:Find"),
+			web.NSRouter("/insertTitle", &controllers.UserController{}, "put:InsertTitle"),
+		),
 		web.NSNamespace("/title",
 			web.NSRouter("/all", &controllers.TitleController{}, "get:All"),
 			web.NSRouter("/add", &controllers.TitleController{}, "post:Add"),
@@ -29,6 +42,5 @@ func init() {
 			web.NSRouter("/getUsersById", &controllers.TitleController{}, "get:GetUsersById"),
 		),
 	)
-	web.AddNamespace(admin)
-	web.InsertFilter("*", beego.BeforeExec, filters.JsonParser)
+	web.AddNamespace(apiRouter)
 }

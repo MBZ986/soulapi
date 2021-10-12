@@ -3,7 +3,9 @@ package controllers
 import (
 	"fmt"
 	beego "github.com/beego/beego/v2/adapter"
+	"github.com/go-playground/validator/v10"
 	"net/http"
+	"soulapi/global"
 )
 
 type BaseController struct {
@@ -85,7 +87,23 @@ func (this *BaseController) Err(code int, msg string, data interface{}) {
 func (this *BaseController) ErrMsg(msg string, args ...interface{}) {
 
 	this.Data["json"] = ReturnMsg{
-		http.StatusBadRequest, fmt.Sprintf(msg, args), nil,
+		http.StatusBadRequest, fmt.Sprintf(msg, args...), nil,
 	}
 	this.ServeJSON() //对json进行序列化输出
+}
+
+func (this *BaseController) ErrE(err error) bool {
+	if err == nil {
+		return true
+	}
+	if errors, ok := err.(validator.ValidationErrors); ok {
+		this.Err(http.StatusBadRequest, "参数校验失败", errors.Translate(global.Trans))
+		return false
+	}
+
+	this.Data["json"] = ReturnMsg{
+		http.StatusBadRequest, err.Error(), nil,
+	}
+	this.ServeJSON() //对json进行序列化输出
+	return false
 }

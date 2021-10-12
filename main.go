@@ -5,6 +5,7 @@ import (
 	_ "soulapi/initialize/conf"
 	_ "soulapi/initialize/logger"
 	_ "soulapi/initialize/mysql"
+	_ "soulapi/initialize/validate"
 	_ "soulapi/routers"
 )
 

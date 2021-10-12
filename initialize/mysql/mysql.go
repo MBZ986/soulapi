@@ -10,6 +10,12 @@ import (
 	"time"
 )
 
+/**
+Error 1292: Incorrect datetime value: '0000-00-00' for column 'birthday' at row 1
+set @@sql_mode = "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";
+set @@global.sql_mode = "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";
+*/
+
 func init() {
 	sqldsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
 		global.GLOBAL_CONFIG.Mysql.Username,

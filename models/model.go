@@ -175,12 +175,12 @@ type Title struct {
 //}
 type User struct {
 	Module
-	Username     string    `gorm:"column:username;type:varchar(255)" db:"username" json:"username"`
-	Password     string    `gorm:"column:password;type:varchar(255)" db:"password" json:"password"`
+	Username     string    `gorm:"column:username;type:varchar(255)" db:"username" json:"username" validate:"required,min=1,max=10"`
+	Password     string    `gorm:"column:password;type:varchar(255)" db:"password" json:"password" validate:"required,min=6,max=20"`
 	HeadImgUrl   string    `gorm:"column:head_img_url;type:varchar(255)" db:"head_img_url" json:"head_img_url"`
 	TopImgUrl    string    `gorm:"column:top_img_url;type:varchar(255)" db:"top_img_url" json:"top_img_url"`
 	Signature    string    `gorm:"column:signature;type:varchar(255)" db:"signature" json:"signature"`
-	Email        string    `gorm:"column:email;type:varchar(255)" db:"email" json:"email"`
+	Email        string    `gorm:"column:email;type:varchar(255)" db:"email" json:"email" validate:"omitempty,email"`
 	Birthday     time.Time `gorm:"column:birthday" db:"birthday" json:"birthday"`
 	State        int       `gorm:"column:state;type:int(4)" db:"state" json:"state"` //状态
 	Root         int       `gorm:"column:root;type:int(4)" db:"root" json:"root"`    //管理员标识
